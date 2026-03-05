@@ -2,9 +2,9 @@
 
 **Multi-vendor network engineering MCP server for Claude.**
 
-You've been doing this for years. You know the commands, you know the vendors, you know what the output means. `netmcp` doesn't replace that — it removes the tedious execution layer so you can focus on the decisions that actually require your expertise.
+`netmcp` removes the tedious execution layer so you can focus on the decisions that actually require your expertise.
 
-Built by a network engineer, for network engineers.
+Built by and for network engineers.
 
 ---
 
