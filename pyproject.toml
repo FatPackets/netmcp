@@ -40,7 +40,7 @@ dev = [
 ]
 
 [project.scripts]
-netmcp = "netmcp.server:mcp.run"
+netmcp = "netmcp.server:main"
 
 [project.urls]
 Homepage = "https://github.com/0xFATPKT/netmcp"
@@ -48,7 +48,7 @@ Repository = "https://github.com/0xFATPKT/netmcp"
 Issues = "https://github.com/0xFATPKT/netmcp"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/netmcp"]
+packages = ["netmcp"]
 
 [tool.ruff]
 line-length = 100

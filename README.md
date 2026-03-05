@@ -6,6 +6,10 @@
 
 Built by and for network engineers.
 
+Technical docs and delivery artifacts are organized under `docs/`:
+
+- [Docs Hub](docs/DOCS_HUB.md)
+
 ---
 
 ## What it does
@@ -24,31 +28,31 @@ Claude → netmcp → Netmiko SSH → Your devices
 
 ## Supported vendors
 
-| Vendor key        | Platform                        |
-|-------------------|---------------------------------|
-| `cisco_ios`       | Cisco IOS (routers, switches)   |
-| `cisco_nxos`      | Cisco NX-OS (Nexus)             |
-| `cisco_asa`       | Cisco ASA (firewall)            |
-| `cisco_ftd`       | Cisco Firepower Threat Defense  |
-| `cisco_xr`        | Cisco IOS-XR                    |
-| `f5_tmsh`         | F5 BIG-IP (TMSH)                |
-| `checkpoint`      | Check Point (CLISH/Expert)      |
-| `juniper_junos`   | Juniper JunOS                   |
-| `arista_eos`      | Arista EOS                      |
-| `paloalto_panos`  | Palo Alto PAN-OS                |
+| Vendor key       | Platform                       |
+| ---------------- | ------------------------------ |
+| `cisco_ios`      | Cisco IOS (routers, switches)  |
+| `cisco_nxos`     | Cisco NX-OS (Nexus)            |
+| `cisco_asa`      | Cisco ASA (firewall)           |
+| `cisco_ftd`      | Cisco Firepower Threat Defense |
+| `cisco_xr`       | Cisco IOS-XR                   |
+| `f5_tmsh`        | F5 BIG-IP (TMSH)               |
+| `checkpoint`     | Check Point (CLISH/Expert)     |
+| `juniper_junos`  | Juniper JunOS                  |
+| `arista_eos`     | Arista EOS                     |
+| `paloalto_panos` | Palo Alto PAN-OS               |
 
 ---
 
 ## Tools
 
-| Tool | What it does |
-|------|-------------|
-| `net_show` | Execute any show command, parse output via ntc-templates |
-| `net_show_multi` | Run multiple commands in a single SSH session |
-| `net_inventory` | Full state snapshot — version, interfaces, routing, neighbors |
-| `net_ping` | Ping FROM a device (source interface, VRF support) |
-| `net_config_backup` | Capture running/startup config with metadata header |
-| `net_vendors` | List supported vendors and server info |
+| Tool                | What it does                                                  |
+| ------------------- | ------------------------------------------------------------- |
+| `net_show`          | Execute any show command, parse output via ntc-templates      |
+| `net_show_multi`    | Run multiple commands in a single SSH session                 |
+| `net_inventory`     | Full state snapshot — version, interfaces, routing, neighbors |
+| `net_ping`          | Ping FROM a device (source interface, VRF support)            |
+| `net_config_backup` | Capture running/startup config with metadata header           |
+| `net_vendors`       | List supported vendors and server info                        |
 
 ---
 
@@ -78,7 +82,7 @@ Add to `%APPDATA%\Claude\claude_desktop_config.json` (Windows) or `~/Library/App
     "netmcp": {
       "command": "python",
       "args": ["-m", "netmcp.server"],
-      "cwd": "C:\\path\\to\\netmcp\\src"
+      "cwd": "C:\\path\\to\\netmcp"
     }
   }
 }
@@ -97,6 +101,46 @@ Or if installed via pip:
 ```
 
 Restart Claude Desktop after updating the config.
+
+---
+
+## Vendor command overrides (optional)
+
+You can override built-in inventory/ping/config commands without editing code.
+
+- Option 1: create `netmcp.commands.json` in the server working directory
+- Option 2: set `NETMCP_COMMAND_OVERRIDES` to an absolute path
+
+Example:
+
+```json
+{
+  "inventory": {
+    "cisco_ios": {
+      "neighbors": "show lldp neighbors detail"
+    },
+    "paloalto_panos": {
+      "routing": "show routing route virtual-router default"
+    }
+  },
+  "ping": {
+    "checkpoint": "ping -c {count} {target}"
+  },
+  "config": {
+    "juniper_junos": {
+      "running": "show configuration | display set"
+    }
+  }
+}
+```
+
+Supported keys:
+
+- `inventory`: vendor -> `{ version | interfaces | routing | neighbors }`
+- `ping`: vendor -> command template string
+- `config`: vendor -> `{ running | startup }`
+
+Invalid keys are ignored with a startup warning in logs.
 
 ---
 
@@ -152,7 +196,7 @@ Config push tools (with confirmation gates) are on the roadmap.
 
 - [ ] Config push with diff preview and confirmation
 - [ ] Multi-device parallel execution
-- [ ] NAPALM integration for vendor-agnostic ops  
+- [ ] NAPALM integration for vendor-agnostic ops
 - [ ] RESTCONF/NETCONF support
 - [ ] Device inventory YAML/CSV import
 - [ ] Baseline compare (before/after change)
@@ -163,7 +207,7 @@ Config push tools (with confirmation gates) are on the roadmap.
 
 ## Author
 
-**0xFATPKT** — Division Network Engineer, 14+ years enterprise infrastructure.  
+**0xFATPKT** — Division Network Engineer, 14+ years enterprise infrastructure.
 Cisco, F5, Firepower, Check Point. Now also AI/automation.
 
 GitHub: [@0xFATPKT](https://github.com/0xFATPKT)
